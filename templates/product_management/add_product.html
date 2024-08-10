@@ -1,0 +1,456 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Añadir Nuevo Producto - NimbleCommerce{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+{% endblock %}
+{% block extra_styles %}
+<style>
+    .select2-container--default .select2-selection--single {
+        height: 38px;
+        padding: 5px 10px;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: 0.375rem;
+        border: 1px solid #d1d5db;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 36px;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 28px;
+    }
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #4f46e5;
+    }
+    .dark .select2-container--default .select2-selection--single {
+        background-color: #1f2937;
+        border-color: #4b5563;
+        color: #ffffff;
+    }
+    .dark .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #6366f1;
+    }
+    .dark .select2-dropdown {
+        background-color: #1f2937;
+        border-color: #4b5563;
+    }
+    .dark .select2-results__option {
+        color: #ffffff;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg">
+        <div class="px-4 py-5 sm:px-6">
+            <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Añadir Nuevo Producto</h1>
+        </div>
+        <div class="border-t border-gray-200 dark:border-gray-700">
+            <form id="addProductForm" class="space-y-8 divide-y divide-gray-200 dark:divide-gray-700">
+                {% csrf_token %}
+                <div class="space-y-8 sm:space-y-5 p-4">
+                    <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:pt-5">
+                        <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 sm:mt-px sm:pt-2">
+                            <i class="fas fa-tag mr-2"></i>Nombre del Producto <span class="text-red-500">*</span>
+                        </label>
+                        <div class="mt-1 sm:mt-0 sm:col-span-2">
+                            <input type="text" name="name" id="name" required class="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
+                        </div>
+                    </div>
+
+                    <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 dark:border-gray-700 sm:pt-5">
+                        <label for="price" class="block text-sm font-medium text-gray-700 dark:text-gray-300 sm:mt-px sm:pt-2">
+                            <i class="fas fa-dollar-sign mr-2"></i>Precio <span class="text-red-500">*</span>
+                        </label>
+                        <div class="mt-1 sm:mt-0 sm:col-span-2">
+                            <input type="number" name="price" id="price" step="0.01" required class="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md">
+                        </div>
+                    </div>
+
+                    <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 dark:border-gray-700 sm:pt-5">
+                        <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 sm:mt-px sm:pt-2">
+                            <i class="fas fa-align-left mr-2"></i>Descripción <span class="text-red-500">*</span>
+                        </label>
+                        <div class="mt-1 sm:mt-0 sm:col-span-2">
+                            <textarea id="description" name="description" rows="3" required class="max-w-lg shadow-sm block w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 dark:border-gray-700 sm:pt-5">
+                        <label for="short_description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 sm:mt-px sm:pt-2">
+                            <i class="fas fa-compress-alt mr-2"></i>Descripción Corta <span class="text-gray-500">(Opcional)</span>
+                        </label>
+                        <div class="mt-1 sm:mt-0 sm:col-span-2">
+                            <textarea id="short_description" name="short_description" rows="2" class="max-w-lg shadow-sm block w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 dark:border-gray-700 sm:pt-5">
+                        <label for="category" class="block text-sm font-medium text-gray-700 dark:text-gray-300 sm:mt-px sm:pt-2">
+                            <i class="fas fa-folder mr-2"></i>Categoría <span class="text-red-500">*</span>
+                        </label>
+                        <div class="mt-1 sm:mt-0 sm:col-span-2">
+                            <input type="text" id="category" name="category" list="categoryList" required class="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-md" placeholder="Buscar una categoría...">
+                            <datalist id="categoryList">
+                                {% for category in categories %}
+                                    <option value="{{ category.name }}" data-id="{{ category.id }}">
+                                {% endfor %}
+                            </datalist>
+                            <input type="hidden" id="categoryId" name="categoryId">
+                        </div>
+                    </div>
+
+                    <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 dark:border-gray-700 sm:pt-5">
+                        <label for="mainImage" class="block text-sm font-medium text-gray-700 dark:text-gray-300 sm:mt-px sm:pt-2">
+                            <i class="fas fa-image mr-2"></i>Imagen del Producto <span class="text-red-500">*</span>
+                        </label>
+                        <div class="mt-1 sm:mt-0 sm:col-span-2">
+                            <div id="mainImageDropzone" class="max-w-lg rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 p-6 flex justify-center items-center" data-url="{% url 'upload_image' %}">
+                                <div class="dz-message space-y-1 text-center">
+                                    <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    <div class="flex text-sm text-gray-600 dark:text-gray-400">
+                                        <span class="relative cursor-pointer bg-white dark:bg-gray-700 rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                                            Subir imagen
+                                        </span>
+                                        <p class="pl-1">o arrastrar y soltar</p>
+                                    </div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">
+                                        PNG, JPG, GIF hasta 10MB
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 dark:border-gray-700 sm:pt-5">
+                        <label for="additionalImages" class="block text-sm font-medium text-gray-700 dark:text-gray-300 sm:mt-px sm:pt-2">
+                            <i class="fas fa-images mr-2"></i>Galería del Producto <span class="text-gray-500">(Opcional)</span>
+                        </label>
+                        <div class="mt-1 sm:mt-0 sm:col-span-2">
+                            <div id="additionalImagesDropzone" class="max-w-lg rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600 p-6 flex justify-center items-center" data-url="{% url 'upload_image' %}">
+                                <div class="dz-message space-y-1 text-center">
+                                    <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    <div class="flex text-sm text-gray-600 dark:text-gray-400">
+                                        <span class="relative cursor-pointer bg-white dark:bg-gray-700 rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                                            Subir imágenes
+                                        </span>
+                                        <p class="pl-1">o arrastrar y soltar</p>
+                                    </div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">
+                                        PNG, JPG, GIF hasta 10MB (máximo 5 imágenes)
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-5 px-4 pb-4">
+                    <div class="flex justify-end">
+                        <button type="button" onclick="window.history.back()" class="bg-white dark:bg-gray-600 py-2 px-4 border border-gray-300 dark:border-gray-500 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Cancelar
+                        </button>
+                        <button type="button" id="saveButton" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            <i class="fas fa-save mr-2"></i>Guardar
+                        </button>
+                        <button type="button" id="saveAndAddAnother" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                            <i class="fas fa-plus mr-2"></i>Guardar y Añadir Otro
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Alerta de éxito -->
+<div id="successAlert" class="hidden fixed bottom-0 inset-x-0 pb-2 sm:pb-5">
+  <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+    <div class="p-2 rounded-lg bg-green-600 shadow-lg sm:p-3">
+      <div class="flex items-center justify-between flex-wrap">
+        <div class="w-0 flex-1 flex items-center">
+          <span class="flex p-2 rounded-lg bg-green-800">
+            <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </span>
+          <p class="ml-3 font-medium text-white truncate">
+            <span class="md:hidden">
+              Producto guardado con éxito!
+            </span>
+            <span class="hidden md:inline">
+              El producto ha sido guardado exitosamente en la base de datos.
+            </span>
+          </p>
+        </div>
+        <div class="order-2 flex-shrink-0 sm:order-3 sm:ml-2">
+          <button type="button" class="-mr-1 flex p-2 rounded-md hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-white">
+            <span class="sr-only">Dismiss</span>
+            <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Alerta de error -->
+<div id="errorAlert" class="hidden fixed bottom-0 inset-x-0 pb-2 sm:pb-5">
+  <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+    <div class="p-2 rounded-lg bg-red-600 shadow-lg sm:p-3">
+      <div class="flex items-center justify-between flex-wrap">
+        <div class="w-0 flex-1 flex items-center">
+          <span class="flex p-2 rounded-lg bg-red-800">
+            <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </span>
+          <p class="ml-3 font-medium text-white truncate">
+            <span class="md:hidden" id="errorMessageShort">
+              Error al guardar el producto.
+            </span>
+            <span class="hidden md:inline" id="errorMessageLong">
+              Ha ocurrido un error al intentar guardar el producto. Por favor, inténtelo de nuevo.
+            </span>
+          </p>
+        </div>
+        <div class="order-2 flex-shrink-0 sm:order-3 sm:ml-2">
+          <button type="button" class="-mr-1 flex p-2 rounded-md hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-white">
+            <span class="sr-only">Dismiss</span>
+            <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+<script>
+Dropzone.autoDiscover = false;
+
+document.addEventListener('DOMContentLoaded', function() {
+    let mainImageFile = null;
+    let additionalImageFiles = [];
+
+    const mainImageDropzone = new Dropzone("#mainImageDropzone", {
+        url: document.getElementById('mainImageDropzone').dataset.url,
+        maxFiles: 1,
+        acceptedFiles: "image/*",
+        addRemoveLinks: true,
+        autoProcessQueue: false,
+        createImageThumbnails: true,
+        init: function() {
+            this.on("addedfile", function(file) {
+                if (this.files.length > 1) {
+                    this.removeFile(this.files[0]);
+                }
+                mainImageFile = file;
+            });
+            this.on("removedfile", function(file) {
+                mainImageFile = null;
+            });
+        }
+    });
+
+    const additionalImagesDropzone = new Dropzone("#additionalImagesDropzone", {
+        url: document.getElementById('additionalImagesDropzone').dataset.url,
+        maxFiles: 5,
+        acceptedFiles: "image/*",
+        addRemoveLinks: true,
+        autoProcessQueue: false,
+        createImageThumbnails: true,
+        init: function() {
+            this.on("addedfile", function(file) {
+                additionalImageFiles.push(file);
+            });
+            this.on("removedfile", function(file) {
+                let index = additionalImageFiles.indexOf(file);
+                if (index !== -1) additionalImageFiles.splice(index, 1);
+            });
+        }
+    });
+
+    const categoryInput = document.getElementById('category');
+    const categoryIdInput = document.getElementById('categoryId');
+    const categoryList = document.getElementById('categoryList');
+
+    categoryInput.addEventListener('input', function() {
+        const selectedOption = categoryList.querySelector(`option[value="${this.value}"]`);
+        if (selectedOption) {
+            categoryIdInput.value = selectedOption.dataset.id;
+        } else {
+            categoryIdInput.value = '';
+        }
+    });
+
+    // Validación personalizada
+    categoryInput.addEventListener('invalid', function(event) {
+        if (categoryIdInput.value === '') {
+            event.preventDefault();
+            this.setCustomValidity('Por favor, selecciona una categoría válida de la lista.');
+        } else {
+            this.setCustomValidity('');
+        }
+    });
+
+    categoryInput.addEventListener('input', function() {
+        this.setCustomValidity('');
+    });
+
+    function validateForm() {
+        const name = document.getElementById('name').value.trim();
+        const price = document.getElementById('price').value.trim();
+        const description = document.getElementById('description').value.trim();
+        const category = document.getElementById('category').value.trim();
+    
+        let errors = [];
+    
+        if (!name) errors.push("El nombre del producto es obligatorio.");
+        if (!price || isNaN(parseFloat(price))) errors.push("El precio debe ser un número válido.");
+        if (!description) errors.push("La descripción del producto es obligatoria.");
+        if (!category) errors.push("Debes seleccionar una categoría.");
+        if (!mainImageFile) errors.push("Debes subir una imagen principal del producto.");
+    
+        if (errors.length > 0) {
+            showAlert('errorAlert', errors.join("<br>"));
+            return false;
+        }
+        return true;
+    }
+    
+    function handleFormSubmit(e, saveAndAddAnother = false) {
+        e.preventDefault();
+        
+        if (!validateForm()) {
+            return;
+        }
+        }
+
+    function handleFormSubmit(e, saveAndAddAnother = false) {
+        e.preventDefault();
+        
+        let formData = new FormData(document.getElementById('addProductForm'));
+        
+        if (mainImageFile) {
+            formData.append('mainImage', mainImageFile);
+        }
+        
+        additionalImageFiles.forEach((file, index) => {
+            formData.append(`additionalImage_${index}`, file);
+        });
+        
+        fetch("{% url 'add_product' %}", {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Response data:', data);  // Para depuración
+            if (data.success) {
+                showAlert('successAlert', data.message || 'Producto añadido exitosamente');
+                if (saveAndAddAnother) {
+                    // Limpiar el formulario y mantener al usuario en la página
+                    document.getElementById('addProductForm').reset();
+                    if (mainImageDropzone) mainImageDropzone.removeAllFiles();
+                    if (additionalImagesDropzone) additionalImagesDropzone.removeAllFiles();
+                    mainImageFile = null;
+                    additionalImageFiles = [];
+                } else {
+                    setTimeout(() => {
+                        window.location.href = "{% url 'product_list' %}";
+                    }, 2000);
+                }
+            } else {
+                showAlert('errorAlert', data.message || 'Error al guardar el producto.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showAlert('errorAlert', 'Error de conexión al guardar el producto.');
+        });
+    }
+
+    function showAlert(alertId, message) {
+        const alert = document.getElementById(alertId);
+        const messageElement = alert.querySelector('p');
+        if (messageElement) {
+            messageElement.innerHTML = message;  // Usamos innerHTML en lugar de textContent
+        }   
+        alert.classList.remove('hidden');
+        setTimeout(() => {
+            alert.classList.add('hidden');
+        }, 5000);
+    }
+
+    document.getElementById('saveButton').addEventListener('click', function(e) {
+        handleFormSubmit(e, false);
+    });
+
+    document.getElementById('saveAndAddAnother').addEventListener('click', function(e) {
+        handleFormSubmit(e, true);
+    });
+
+    document.querySelectorAll('#successAlert button, #errorAlert button').forEach(button => {
+        button.addEventListener('click', function() {
+            this.closest('div[id$="Alert"]').classList.add('hidden');
+        });
+    });
+});
+</script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const categoryInput = document.getElementById('category');
+        const categoryIdInput = document.getElementById('categoryId');
+        const categoryList = document.getElementById('categoryList');
+    
+        categoryInput.addEventListener('input', function() {
+            const selectedOption = categoryList.querySelector(`option[value="${this.value}"]`);
+            if (selectedOption) {
+                categoryIdInput.value = selectedOption.dataset.id;
+            } else {
+                categoryIdInput.value = '';
+            }
+        });
+    
+        // Validación personalizada
+        categoryInput.addEventListener('invalid', function(event) {
+            if (categoryIdInput.value === '') {
+                event.preventDefault();
+                this.setCustomValidity('Por favor, selecciona una categoría válida de la lista.');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+    
+        categoryInput.addEventListener('input', function() {
+            this.setCustomValidity('');
+        });
+    });
+
+
+</script>
+
+    
+{% endblock %}
